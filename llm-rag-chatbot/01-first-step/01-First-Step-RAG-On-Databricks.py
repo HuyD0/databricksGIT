@@ -18,7 +18,11 @@
 # MAGIC Let's start by prepraing our knowledge database. In this simple first demo, we'll be using data from Databricks Documentation already prepared and chuncked.
 # MAGIC
 # MAGIC <!-- Collect usage data (view). Remove it to disable collection or disable tracker during installation. View README for more details.  -->
+<<<<<<< HEAD
 # MAGIC <img width="1px" src="https://ppxrzfxige.execute-api.us-west-2.amazonaws.com/v1/analytics?category=data-science&org_id=2638284274323173&notebook=%2F01-first-step%2F01-First-Step-RAG-On-Databricks&demo_name=llm-rag-chatbot&event=VIEW&path=%2F_dbdemos%2Fdata-science%2Fllm-rag-chatbot%2F01-first-step%2F01-First-Step-RAG-On-Databricks&version=1">
+=======
+# MAGIC <img width="1px" src="https://ppxrzfxige.execute-api.us-west-2.amazonaws.com/v1/analytics?category=data-science&org_id=3681598866980125&notebook=%2F01-first-step%2F01-First-Step-RAG-On-Databricks&demo_name=llm-rag-chatbot&event=VIEW&path=%2F_dbdemos%2Fdata-science%2Fllm-rag-chatbot%2F01-first-step%2F01-First-Step-RAG-On-Databricks&version=1">
+>>>>>>> 361c136 (initial commit)
 
 # COMMAND ----------
 
@@ -295,6 +299,7 @@ chain = (
 
 # COMMAND ----------
 
+<<<<<<< HEAD
 # MAGIC %md-sandbox
 # MAGIC
 # MAGIC #### Databricks will track all the chain for you
@@ -307,6 +312,8 @@ chain = (
 
 # COMMAND ----------
 
+=======
+>>>>>>> 361c136 (initial commit)
 # Let's give it a try:
 input_example = {"messages": [ {"role": "user", "content": "What is Retrieval-augmented Generation?"}]}
 answer = chain.invoke(input_example)

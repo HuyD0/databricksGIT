@@ -5,7 +5,11 @@
 # MAGIC In this tutorial, you will learn how to build your own Chatbot Assisstant to help your customers answer questions about Databricks, using Retrieval Augmented Generation (RAG), Databricks State of The Art LLM DBRX Instruct Foundation Model Vector Search.
 # MAGIC
 # MAGIC <!-- Collect usage data (view). Remove it to disable collection or disable tracker during installation. View README for more details.  -->
+<<<<<<< HEAD
 # MAGIC <img width="1px" src="https://ppxrzfxige.execute-api.us-west-2.amazonaws.com/v1/analytics?category=data-science&org_id=2638284274323173&notebook=%2F00-RAG-LLM-RAG-Introduction&demo_name=llm-rag-chatbot&event=VIEW&path=%2F_dbdemos%2Fdata-science%2Fllm-rag-chatbot%2F00-RAG-LLM-RAG-Introduction&version=1">
+=======
+# MAGIC <img width="1px" src="https://ppxrzfxige.execute-api.us-west-2.amazonaws.com/v1/analytics?category=data-science&org_id=3681598866980125&notebook=%2F00-RAG-LLM-RAG-Introduction&demo_name=llm-rag-chatbot&event=VIEW&path=%2F_dbdemos%2Fdata-science%2Fllm-rag-chatbot%2F00-RAG-LLM-RAG-Introduction&version=1">
+>>>>>>> 361c136 (initial commit)
 
 # COMMAND ----------
 
@@ -53,7 +57,11 @@
 # MAGIC
 # MAGIC
 # MAGIC <!-- Collect usage data (view). Remove it to disable collection or disable tracker during installation. View README for more details.  -->
+<<<<<<< HEAD
 # MAGIC <img width="1px" src="https://ppxrzfxige.execute-api.us-west-2.amazonaws.com/v1/analytics?category=data-science&org_id=2638284274323173&notebook=%2F00-RAG-LLM-RAG-Introduction&demo_name=llm-rag-chatbot&event=VIEW&path=%2F_dbdemos%2Fdata-science%2Fllm-rag-chatbot%2F00-RAG-LLM-RAG-Introduction&version=1">
+=======
+# MAGIC <img width="1px" src="https://ppxrzfxige.execute-api.us-west-2.amazonaws.com/v1/analytics?category=data-science&org_id=3681598866980125&notebook=%2F00-RAG-LLM-RAG-Introduction&demo_name=llm-rag-chatbot&event=VIEW&path=%2F_dbdemos%2Fdata-science%2Fllm-rag-chatbot%2F00-RAG-LLM-RAG-Introduction&version=1">
+>>>>>>> 361c136 (initial commit)
 
 # COMMAND ----------
 

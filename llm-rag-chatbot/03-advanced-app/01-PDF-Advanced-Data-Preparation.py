@@ -24,7 +24,7 @@
 # MAGIC Lakehouse AI not only provides state of the art solutions to accelerate your AI and LLM projects, but also to accelerate data ingestion and preparation at scale, including unstructured data like PDFs.
 # MAGIC
 # MAGIC <!-- Collect usage data (view). Remove it to disable collection or disable tracker during installation. View README for more details.  -->
-# MAGIC <img width="1px" src="https://ppxrzfxige.execute-api.us-west-2.amazonaws.com/v1/analytics?category=data-science&org_id=2638284274323173&notebook=%2F03-advanced-app%2F01-PDF-Advanced-Data-Preparation&demo_name=llm-rag-chatbot&event=VIEW&path=%2F_dbdemos%2Fdata-science%2Fllm-rag-chatbot%2F03-advanced-app%2F01-PDF-Advanced-Data-Preparation&version=1">
+# MAGIC <img width="1px" src="https://ppxrzfxige.execute-api.us-west-2.amazonaws.com/v1/analytics?category=data-science&org_id=3681598866980125&notebook=%2F03-advanced-app%2F01-PDF-Advanced-Data-Preparation&demo_name=llm-rag-chatbot&event=VIEW&path=%2F_dbdemos%2Fdata-science%2Fllm-rag-chatbot%2F03-advanced-app%2F01-PDF-Advanced-Data-Preparation&version=1">
 
 # COMMAND ----------
 
@@ -51,17 +51,27 @@
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC CREATE VOLUME IF NOT EXISTS volume_databricks_documentation;
+# MAGIC
+# MAGIC create table if not exists test;
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC
+# MAGIC
+# MAGIC CREATE VOLUME IF NOT EXISTS sandbox.files.blob_eus;
 
 # COMMAND ----------
 
 # DBTITLE 1,Our pdf or docx files are available in our Volume (or DBFS)
 # List our raw PDF docs
-volume_folder =  f"/Volumes/{catalog}/{db}/volume_databricks_documentation"
+catalog = "sandbox"
+db = "files"
+volume_folder = "/Volumes/sandbox/files/blob_eus"
 # Let's upload some pdf files to our volume as example. Change this with your own PDFs / docs.
-upload_pdfs_to_volume(volume_folder+"/databricks-pdf")
 
-display(dbutils.fs.ls(volume_folder+"/databricks-pdf"))
+
+display(dbutils.fs.ls(volume_folder))
 
 # COMMAND ----------
 
@@ -70,17 +80,17 @@ df = (spark.readStream
         .format('cloudFiles')
         .option('cloudFiles.format', 'BINARYFILE')
         .option("pathGlobFilter", "*.pdf")
-        .load('dbfs:'+volume_folder+"/databricks-pdf"))
+        .load('dbfs:'+volume_folder))
 
 # Write the data as a Delta table
 (df.writeStream
   .trigger(availableNow=True)
-  .option("checkpointLocation", f'dbfs:{volume_folder}/checkpoints/raw_docs')
-  .table('pdf_raw').awaitTermination())
+  .option("checkpointLocation", f'dbfs:{volume_folder}/checkpoints/ccfiles')
+  .table('sandbox.complianceclaude.ccfiles').awaitTermination())
 
 # COMMAND ----------
 
-# MAGIC %sql SELECT * FROM pdf_raw LIMIT 2
+# MAGIC %sql SELECT * FROM sandbox.complianceclaude.ccfiles LIMIT 2
 
 # COMMAND ----------
 
@@ -171,7 +181,7 @@ spark.conf.set("spark.sql.execution.arrow.maxRecordsPerBatch", 10)
 
 @pandas_udf("array<string>")
 def read_as_chunk(batch_iter: Iterator[pd.Series]) -> Iterator[pd.Series]:
-    #set llama2 as tokenizer to match our model size (will stay below gte 1024 limit)
+    #set llama2 as tokenizer to match our model size (will stay below BGE 1024 limit)
     set_global_tokenizer(
       AutoTokenizer.from_pretrained("hf-internal-testing/llama-tokenizer")
     )
@@ -207,7 +217,7 @@ def read_as_chunk(batch_iter: Iterator[pd.Series]) -> Iterator[pd.Series]:
 # COMMAND ----------
 
 # MAGIC %md-sandbox
-# MAGIC ## Introducing Databricks GTE Embeddings Foundation Model endpoints
+# MAGIC ## Introducing Databricks BGE Embeddings Foundation Model endpoints
 # MAGIC
 # MAGIC <img src="https://github.com/databricks-demos/dbdemos-resources/blob/main/images/product/chatbot-rag/rag-pdf-self-managed-4.png?raw=true" style="float: right; width: 600px; margin-left: 10px">
 # MAGIC
@@ -220,20 +230,20 @@ def read_as_chunk(batch_iter: Iterator[pd.Series]) -> Iterator[pd.Series]:
 # MAGIC
 # MAGIC Open the [Model Serving Endpoint page](/ml/endpoints) to explore and try the foundation models.
 # MAGIC
-# MAGIC For this demo, we will use the foundation model `GTE` (embeddings) and `DBRX` (chat). <br/><br/>
+# MAGIC For this demo, we will use the foundation model `BGE` (embeddings) and `llama2-70B` (chat). <br/><br/>
 # MAGIC
 # MAGIC <img src="https://github.com/databricks-demos/dbdemos-resources/blob/main/images/product/chatbot-rag/databricks-foundation-models.png?raw=true" width="600px" >
 
 # COMMAND ----------
 
-# DBTITLE 1,Using Databricks Foundation model GTE as embedding endpoint
+# DBTITLE 1,Using Databricks Foundation model BGE as embedding endpoint
 from mlflow.deployments import get_deploy_client
 
-# gte-large-en Foundation models are available using the /serving-endpoints/databricks-gtegte-large-en/invocations api. 
+# bge-large-en Foundation models are available using the /serving-endpoints/databricks-bge-large-en/invocations api. 
 deploy_client = get_deploy_client("databricks")
 
 ## NOTE: if you change your embedding model here, make sure you change it in the query step too
-embeddings = deploy_client.predict(endpoint="databricks-gte-large-en", inputs={"input": ["What is Apache Spark?"]})
+embeddings = deploy_client.predict(endpoint="databricks-bge-large-en", inputs={"input": ["What is Apache Spark?"]})
 pprint(embeddings)
 
 # COMMAND ----------
@@ -265,7 +275,7 @@ def get_embedding(contents: pd.Series) -> pd.Series:
     deploy_client = mlflow.deployments.get_deploy_client("databricks")
     def get_embeddings(batch):
         #Note: this will fail if an exception is thrown during embedding creation (add try/except if needed) 
-        response = deploy_client.predict(endpoint="databricks-gte-large-en", inputs={"input": batch})
+        response = deploy_client.predict(endpoint="databricks-bge-large-en", inputs={"input": batch})
         return [e['embedding'] for e in response.data]
 
     # Splitting the contents into batches of 150 items each, since the embedding model takes at most 150 inputs per request.
@@ -357,7 +367,7 @@ if not index_exists(vsc, VECTOR_SEARCH_ENDPOINT_NAME, vs_index_fullname):
     source_table_name=source_table_fullname,
     pipeline_type="TRIGGERED", #Sync needs to be manually triggered
     primary_key="id",
-    embedding_dimension=1024, #Match your model embedding size (gte)
+    embedding_dimension=1024, #Match your model embedding size (bge)
     embedding_vector_column="embedding"
   )
   #Let's wait for the index to be ready and all our embeddings to be created and indexed
@@ -384,7 +394,7 @@ else:
 
 question = "How can I track billing usage on my workspaces?"
 
-response = deploy_client.predict(endpoint="databricks-gte-large-en", inputs={"input": [question]})
+response = deploy_client.predict(endpoint="databricks-bge-large-en", inputs={"input": [question]})
 embeddings = [e['embedding'] for e in response.data]
 
 results = vsc.get_index(VECTOR_SEARCH_ENDPOINT_NAME, vs_index_fullname).similarity_search(
